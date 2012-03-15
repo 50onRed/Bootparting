@@ -4,12 +4,16 @@
 		<title>Dayparting Demo</title>
 		<link rel='stylesheet' type='text/css' href='css/bootstrap.min.css' />
 		<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>
+		<script type='text/javascript' src='http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js'></script>
 		<script type='text/javascript' src='js/dayparting.js'></script>
 	</head>
 	<body>
 		<div class='container'>
 			<h1>Dayparting demo</h1>
-			<table class='table' id='dayparting'></table>
+			<form action='#' method='post'>
+				<table class='table' id='dayparting'></table>
+				<input type='submit' class='btn btn-primary' />
+			</form>
 		</div>
 		<script type='text/javascript'>
 			$(function() {

@@ -21,6 +21,20 @@
 			this.element.appendChild(this.create_head());
 			this.element.appendChild(this.create_body());
 			this.wire_headers();
+			this.wire_form();
+		},
+
+		wire_form: function() {
+			var form = $(this.element).parent('form');
+			var hidden = document.createElement('input');
+			hidden.name = 'bootpart_schedule';
+			hidden.type = 'hidden';
+			$(hidden).appendTo($(form));
+
+			var daypart = this;
+			$(form).submit(function(){
+				$(hidden).val(JSON.stringify(daypart.generate_output_object()));
+			});
 		},
 
 		/* Wire up the header checkboxes so that they function as toggles for rows & cols */
@@ -28,23 +42,24 @@
 			var daypart = this;
 			for (hour_index in this.headers['hours']) {
 				var hour_key = hour_index;
+
+				/* Use closures to handle column toggling */
 				this.headers['hours'][hour_index].onchange = (function(hour_key, daypart) {
 					return function() {
-						var newval = daypart.headers['hours'][hour_key].checked;
 						for (day_key in daypart.rows[hour_key]) {
-							daypart.rows[hour_key][day_key].checked = newval;
+							daypart.rows[hour_key][day_key].checked = daypart.headers['hours'][hour_key].checked;
 						}
 					};
 				})(hour_key, daypart);
 			}
 
+			/* Use closures to handle row toggling */
 			for (day_index in this.headers['days']) {
 				var day_key = day_index;
 				this.headers['days'][day_index].onchange = (function(day_key, daypart) {
 					return function() {
-						var newval = daypart.headers['days'][day_key].checked;
 						for (hour_key in daypart.cols[day_key]) {
-							daypart.cols[day_key][hour_key].checked = newval;
+							daypart.cols[day_key][hour_key].checked = daypart.headers['days'][day_key].checked;
 						}
 					}
 				})(day_key, daypart);
@@ -133,6 +148,22 @@
 			}
 
 			return tbody;
+		},
+
+
+		/* Geneate an object that has simple booleans for the grid, ie: schedule['Mon'][6] = true */
+		generate_output_object: function() {
+			var schedule = {};
+			for (day_index in this.days) {
+				var day = this.days[day_index];
+				schedule[day] = {};
+				for (hour_index in this.hours) {
+					var hour = this.hours[hour_index];
+					schedule[day][hour] = this.rows[hour_index][day_index].checked;
+				}
+			}
+
+			return schedule;
 		},
 
 		get_display_hour: function(hour) {
