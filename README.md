@@ -7,11 +7,13 @@ Tested against:
 * jQuery 1.7.1
 
 Works well on:
+
 * Firefox (latest)
 * Chrome (latest)
 * IE8+
 
 Is really ugly on:
+
 * IE6 (of course)
 
 ## How to use
