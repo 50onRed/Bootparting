@@ -1,10 +1,12 @@
 !function($) {
-	var Daypart = function(element, options) {
-		this.init('daypart', element, options);
+	"use strict";
+
+	var Bootparting = function(element, options) {
+		this.init('bootparting', element, options);
 	};
 
-	Daypart.prototype = {
-		constructor: Daypart,
+	Bootparting.prototype = {
+		constructor: Bootparting,
 		element: null,
 		days: {0: 'Sun',1: 'Mon',2: 'Tue',3: 'Wed',4: 'Thu',5: 'Fri',6: 'Sat'},
 		hours: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
@@ -25,44 +27,45 @@
 		},
 
 		wire_form: function() {
-			var form = $(this.element).parent('form');
+			var form = $(this.element).parent('form'); 
 			var hidden = document.createElement('input');
+			var bootparting = this;
+			
 			hidden.name = 'bootpart_schedule';
 			hidden.type = 'hidden';
 			$(hidden).appendTo($(form));
-
-			var daypart = this;
+			
 			$(form).submit(function(){
-				$(hidden).val(JSON.stringify(daypart.generate_output_object()));
+				$(hidden).val(JSON.stringify(bootparting.generate_output_object()));
 			});
 		},
 
 		/* Wire up the header checkboxes so that they function as toggles for rows & cols */
 		wire_headers: function() {
-			var daypart = this;
-			for (hour_index in this.headers['hours']) {
+			var bootparting = this;
+			for (var hour_index in this.headers['hours']) {
 				var hour_key = hour_index;
 
 				/* Use closures to handle column toggling */
-				this.headers['hours'][hour_index].onchange = (function(hour_key, daypart) {
+				this.headers['hours'][hour_index].onchange = (function(hour_key, bootparting) {
 					return function() {
-						for (day_key in daypart.rows[hour_key]) {
-							daypart.rows[hour_key][day_key].checked = daypart.headers['hours'][hour_key].checked;
+						for (day_key in bootparting.rows[hour_key]) {
+							bootparting.rows[hour_key][day_key].checked = bootparting.headers['hours'][hour_key].checked;
 						}
 					};
-				})(hour_key, daypart);
+				})(hour_key, bootparting);
 			}
 
 			/* Use closures to handle row toggling */
-			for (day_index in this.headers['days']) {
+			for (var day_index in this.headers['days']) {
 				var day_key = day_index;
-				this.headers['days'][day_index].onchange = (function(day_key, daypart) {
+				this.headers['days'][day_index].onchange = (function(day_key, bootparting) {
 					return function() {
-						for (hour_key in daypart.cols[day_key]) {
-							daypart.cols[day_key][hour_key].checked = daypart.headers['days'][day_key].checked;
+						for (hour_key in bootparting.cols[day_key]) {
+							bootparting.cols[day_key][hour_key].checked = bootparting.headers['days'][day_key].checked;
 						}
 					}
-				})(day_key, daypart);
+				})(day_key, bootparting);
 			}
 		},
 
@@ -154,10 +157,10 @@
 		/* Geneate an object that has simple booleans for the grid, ie: schedule['Mon'][6] = true */
 		generate_output_object: function() {
 			var schedule = {};
-			for (day_index in this.days) {
+			for (var day_index in this.days) {
 				var day = this.days[day_index];
 				schedule[day] = {};
-				for (hour_index in this.hours) {
+				for (var hour_index in this.hours) {
 					var hour = this.hours[hour_index];
 					schedule[day][hour] = this.rows[hour_index][day_index].checked;
 				}
@@ -171,12 +174,12 @@
 		}
 	};
 
-	$.fn.daypart = function(option) {
+	$.fn.bootparting = function(option) {
 		return this.each(function() {
 			var $this = $(this);
 			var options = (typeof option == 'object') ? option : null;
-			var daypart = new Daypart(this, options);
+			var bootparting = new Bootparting(this, options);
 		});
 	};
-	$.fn.daypart.Constructor = Daypart;
+	$.fn.bootparting.Constructor = Bootparting;
 }(window.jQuery);
