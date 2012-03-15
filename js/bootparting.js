@@ -47,7 +47,7 @@
 				var hour_key = hour_index;
 
 				/* Use closures to handle column toggling */
-				this.headers['hours'][hour_index].onchange = (function(hour_key, bootparting) {
+				this.headers['hours'][hour_index].onclick = (function(hour_key, bootparting) {
 					return function() {
 						for (day_key in bootparting.rows[hour_key]) {
 							bootparting.rows[hour_key][day_key].checked = bootparting.headers['hours'][hour_key].checked;
@@ -59,7 +59,7 @@
 			/* Use closures to handle row toggling */
 			for (var day_index in this.headers['days']) {
 				var day_key = day_index;
-				this.headers['days'][day_index].onchange = (function(day_key, bootparting) {
+				this.headers['days'][day_index].onclick = (function(day_key, bootparting) {
 					return function() {
 						for (hour_key in bootparting.cols[day_key]) {
 							bootparting.cols[day_key][hour_key].checked = bootparting.headers['days'][day_key].checked;
@@ -81,7 +81,7 @@
 				var label = document.createElement('label');
 				var input_id = 'day_' + day_index + '_header';
 				$(label).attr('for', input_id);
-				label.innerText = ' ' + this.days[day_index];
+				label.innerHTML = ' ' + this.days[day_index];
 				
 				var checkbox = document.createElement('input');
 				checkbox.type = 'checkbox';
@@ -114,7 +114,7 @@
 				var input_id = 'hour_' + hour_index + '_check';
 				var label = document.createElement('label');
 				$(label).attr('for', input_id);
-				label.innerText = this.get_display_hour(hour) + ' ';
+				label.innerHTML = this.get_display_hour(hour) + ' ';
 				label.className = 'pull-left';
 
 				var check = document.createElement('input');
