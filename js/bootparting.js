@@ -13,6 +13,8 @@
 		headers: null,
 		rows: null,
 		cols: null,
+		form_id: null,
+		data: null,
 
 		init: function(type, element, options) {
 			this.element = element;
@@ -20,6 +22,16 @@
 			this.rows = {};
 			this.cols = {};
 			
+			if (options != null) {
+				if ('form_id' in options) {
+					this.form_id = options['form_id'];
+				}
+
+				if ('data' in options && Object.keys(options['data']).length > 0) {
+					this.data = options['data'];
+				}
+			}
+
 			this.element.appendChild(this.create_head());
 			this.element.appendChild(this.create_body());
 			this.wire_headers();
@@ -27,7 +39,7 @@
 		},
 
 		wire_form: function() {
-			var form = $(this.element).parent('form'); 
+			var form = (this.form_id != null) ? $('#' + this.form_id) : $(this.element).parent('form'); 
 			var hidden = document.createElement('input');
 			var bootparting = this;
 			
@@ -132,8 +144,17 @@
 					var td = document.createElement('td');
 					var check = document.createElement('input');
 					check.type = 'checkbox';
-					check.checked = true;
-					
+
+					if (this.data != null) {
+						check.checked = false;
+						if (this.days[day_index] in this.data) {
+							if (this.hours[hour_index] in this.data[this.days[day_index]]) {
+								check.checked = true;
+							}
+						}
+					} else {
+						check.checked = true;
+					}
 
 					this.rows[hour_index][day_index] = check;
 					if (!(day_index in this.cols)) {
